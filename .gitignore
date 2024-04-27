@@ -3,3 +3,4 @@ database-data
 uploads
 .env
 mongo-backup.tar
+node_modules
