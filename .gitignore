@@ -3,4 +3,4 @@ database-data
 uploads
 .env
 mongo-backup.tar
-node_modules
+WaspDetectionBE/node_modules
