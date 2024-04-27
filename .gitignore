@@ -1,0 +1,5 @@
+backup
+database-data
+uploads
+.env
+mongo-backup.tar
