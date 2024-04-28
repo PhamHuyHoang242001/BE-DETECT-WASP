@@ -1,6 +1,6 @@
 backup/
 database-data/
-/uploads/
+/uploads
 .env
 mongo-backup.tar
 node_modules/
