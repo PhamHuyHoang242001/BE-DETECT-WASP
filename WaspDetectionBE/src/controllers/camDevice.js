@@ -1,6 +1,7 @@
 
 const CamDevice = require("../models/camDevice")
 const Farm = require("../models/farm")
+const Farm = require("../models/farm")
 exports.camDeviceById = (req, res, next, id) => {
     CamDevice.findById(id).exec((err, camDevice) => {
         if (err || !camDevice) {
