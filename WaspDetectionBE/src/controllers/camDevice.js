@@ -1,6 +1,6 @@
 
 const CamDevice = require("../models/camDevice")
-
+const Farm = require("../models/farm")
 exports.camDeviceById = (req, res, next, id) => {
     CamDevice.findById(id).exec((err, camDevice) => {
         if (err || !camDevice) {
@@ -28,19 +28,21 @@ exports.read = (req, res) => {
     return res.json(req.camDevice);
 };
 exports.update = (req, res) => {
-    const camDevice = req.camDevice;
-    camDevice.name = req.body.name ? req.body.name : camDevice.name;
-    camDevice.farmID = req.body.farmID ? req.body.farmID : camDevice.farmID;
-    camDevice.resolution = req.body.resolution ? req.body.resolution : camDevice.resolution;
-    camDevice.delayTime = req.body.delayTime ? req.body.delayTime : camDevice.delayTime;
-    camDevice.save((err, data) => {
-        if (err) {
-            return res.status(400).json({
-                error: errorHandler(err),
-            });
+    CamDevice.findOneAndUpdate(
+        { _id: req.camDevice._id },
+        req.body,
+        { new: true },
+        (err, camDevice) => {
+            if (err) {
+                console.log(err)
+                return res.status(400).json({
+                    error: "You are not authorized",
+                });
+            }
+
+            res.json(camDevice);
         }
-        res.json(data);
-    });
+    );
 };
 exports.remove = (req, res) => {
     const camDevice = req.camDevice;
@@ -94,3 +96,54 @@ exports.listSearch = async (req, res) => {
         });
     }
 };
+exports.listCamDeviceNotUsed = async (req, res) => {
+    try {
+        console.log(req.params.userID)
+        const list = await CamDevice.find({$and:[{userID: req.params.userID},{farmID: null}]}).select("_id name")
+        console.log(list)
+        return res.json(list)
+
+    }
+    catch (err) {
+        return res.status(400).json({err: err})
+    }
+
+}
+exports.changeNumberDeviceInsert =async (req,res,next) =>{
+    try{
+        if(req.body.farmID){
+            const farm = await Farm.findById(req.body.farmID)
+            if(farm) farm.numberDevices += 1
+            await farm.save()
+            next()
+        }
+    }catch(err){
+        console.log(err)
+        return res.status(400).json({error: 
+            "error"
+        })
+    }
+
+}
+exports.changeNumberDevice =async (req,res,next) =>{
+    try{
+        if(!req.body.farmID || req.body.farmID == req.camDevice.farmID) next();
+        const oldFarm = await Farm.findById(req.camDevice.farmID)
+        console.log(oldFarm)
+        if(oldFarm){
+            oldFarm.numberDevices -= 1
+        await oldFarm.save()
+        }
+        const newFarm = await Farm.findById(req.body.farmID);
+        if(newFarm) {newFarm.numberDevices += 1
+        await newFarm.save()
+        }
+        next()
+    }catch(err){
+        console.log(err)
+        return res.status(400).json({error: 
+            "error"
+        })
+    }
+
+}

@@ -19,6 +19,12 @@ const camDeviceSchema = new mongoose.Schema(
             trim: true,
             required: true,
             maxlength: 32,
+        },status:{
+            type: Boolean,
+            default: false,
+        },userID:{
+            type: ObjectId,
+            ref: "User",
         }
     },
     { timestamps: true }

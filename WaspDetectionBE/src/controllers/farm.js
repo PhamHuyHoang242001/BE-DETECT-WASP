@@ -30,14 +30,8 @@ exports.read = (req, res) => {
 };
 exports.list = async (req, res) => {
     try {
-        const farmByUser = await Farm.find({ ownerID: { $eq: req.params.ownerID } })
-        console.log(farmByUser)
-        for(const key in farmByUser){
-            const camCount = await CamDevice.countDocuments({ farmID: { $eq: farmByUser[key]._id } })
-
-            farmByUser[key].numberDevices = camCount;
-        }
-
+        let farmByUser = await Farm.find({ ownerID: { $eq: req.params.ownerID } })
+        
         return res.json(farmByUser)
     } catch (err) {
         return res.status(400).json({
@@ -81,6 +75,7 @@ exports.update = (req, res) => {
     const farm = req.farm;
     farm.name = req.body.name ? req.body.name : farm.name;
     farm.ownerID = req.body.ownerID ? req.body.ownerID : farm.ownerID
+    farm.numberDevices = req.body.numberDevices ? req.body.numberDevices : farm.numberDevices
     farm.save((err, data) => {
         if (err) {
             return res.status(400).json({
