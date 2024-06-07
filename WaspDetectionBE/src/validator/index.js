@@ -20,3 +20,13 @@ exports.userSignupValidator = (req, res, next) => {
     }
     next()
 }
+exports.userUpdateValidator = (req,res,next) => {
+    req.check('phone','Cannot change phone number').isEmpty()
+    const errors = req.validationErrors()
+    if(errors){
+        const firstError =errors.map(error => error.msg)[0]
+        return res.status(400).json({error: firstError})
+    }
+    next()
+
+}

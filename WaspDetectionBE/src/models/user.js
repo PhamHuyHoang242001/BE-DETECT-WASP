@@ -1,13 +1,8 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 const { v1: uuidv1 } = require("uuid");
-const { ObjectId } = mongoose.Schema;
 const userSchema = new mongoose.Schema(
     {
-        farmID:{
-            type: ObjectId,
-            ref: "Farm",
-        },
         name: {
             type: String,
             trim: true,
@@ -18,7 +13,6 @@ const userSchema = new mongoose.Schema(
             type: String,
             trim: true,
             required: true,
-            unique: 32,
         },
         hashed_password: {
             type: String,

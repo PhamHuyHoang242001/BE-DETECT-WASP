@@ -37,6 +37,7 @@ exports.errorHandler = error => {
                 message = "Something went wrong";
         }
     } else {
+        console.log(error)
         for (let errorName in error.errorors) {
             if (error.errorors[errorName].message)
                 message = error.errorors[errorName].message;

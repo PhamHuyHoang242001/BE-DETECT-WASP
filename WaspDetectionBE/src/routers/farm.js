@@ -7,6 +7,7 @@ const {
     update,
     remove,
     list,
+    listSearch
 } = require("../controllers/farm.js");
 
 
@@ -23,5 +24,5 @@ router.delete(
 );
 router.get("/farm/user/:ownerID", list);
 router.param("farmId", farmById);
-
+router.get("/farm", listSearch);
 module.exports = router;

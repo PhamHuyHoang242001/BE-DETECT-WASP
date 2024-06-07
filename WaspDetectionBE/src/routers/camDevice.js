@@ -6,7 +6,8 @@ const {
     read,
     update,
     remove,
-    list,
+    listByFarm,
+    listSearch,
 } = require("../controllers/camDevice.js");
 
 
@@ -21,8 +22,8 @@ router.delete(
     "/camdevice/:camDeviceId",
     remove
 );
-router.get("/camdevice/farm/:farmID", list);
-
+router.get("/camdevice/farm/:farmID", listByFarm);
+router.get("/camdevice", listSearch);
 router.param("camDeviceId", camDeviceById);
 
 module.exports = router;

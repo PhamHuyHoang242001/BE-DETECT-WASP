@@ -41,6 +41,7 @@ exports.signin = (req, res) => {
         res.cookie("t", token, { expire: new Date() + 9999 });
         user.fcm_token = fcm_token
         const { _id, name, email, role, phone, address } = user;
+        console.log(user);
         user.save((err, data) => {
             if (err) {
                 return res.status(400).json({
