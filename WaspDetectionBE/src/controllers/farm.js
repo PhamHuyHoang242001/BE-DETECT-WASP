@@ -30,14 +30,8 @@ exports.read = (req, res) => {
 };
 exports.list = async (req, res) => {
     try {
-        const farmByUser = await Farm.find({ ownerID: { $eq: req.params.ownerID } })
-        console.log(farmByUser)
-        for(const key in farmByUser){
-            const camCount = await CamDevice.countDocuments({ farmID: { $eq: farmByUser[key]._id } })
-
-            farmByUser[key].numberDevices = camCount;
-        }
-
+        let farmByUser = await Farm.find({ ownerID: { $eq: req.params.ownerID } })
+        
         return res.json(farmByUser)
     } catch (err) {
         return res.status(400).json({

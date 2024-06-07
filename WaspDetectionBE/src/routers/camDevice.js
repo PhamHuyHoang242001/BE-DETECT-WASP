@@ -8,14 +8,15 @@ const {
     remove,
     listByFarm,
     listSearch,
+    changeNumberDevice,
 } = require("../controllers/camDevice.js");
 
 
 
-router.post("/camdevice", create);
+router.post("/camdevice", changeNumberDeviceInsert, create);
 router.get("/camdevice/:camDeviceId", read);
 router.put(
-    "/camdevice/:camDeviceId",
+    "/camdevice/:camDeviceId", changeNumberDevice,
     update
 );
 router.delete(

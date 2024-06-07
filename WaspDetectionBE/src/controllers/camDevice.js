@@ -1,6 +1,6 @@
 
 const CamDevice = require("../models/camDevice")
-
+const Farm = require("../models/farm")
 exports.camDeviceById = (req, res, next, id) => {
     CamDevice.findById(id).exec((err, camDevice) => {
         if (err || !camDevice) {
@@ -94,3 +94,37 @@ exports.listSearch = async (req, res) => {
         });
     }
 };
+exports.changeNumberDeviceInsert =async (req,res,next) =>{
+    try{
+        if(req.body.farmID){
+            const farm = await Farm.findById(req.body.farmID)
+            if(farm) farm.numberDevices += 1
+            next()
+        }
+    }catch(err){
+        console.log(err)
+        return res.status(400).json({error: 
+            "error"
+        })
+    }
+
+}
+exports.changeNumberDevice =async (req,res,next) =>{
+    try{
+        if(!req.body.farmID || req.body.farmID == req.camDevice.farmID) next();
+        const oldFarm = await Farm.findById(req.camDevice.farmID)
+        console.log(oldFarm)
+        oldFarm.numberDevices -= 1
+        await oldFarm.save()
+        const newFarm = await Farm.findById(req.body.farmID);
+        newFarm.numberDevices += 1
+        await newFarm.save()
+        next()
+    }catch(err){
+        console.log(err)
+        return res.status(400).json({error: 
+            "error"
+        })
+    }
+
+}
