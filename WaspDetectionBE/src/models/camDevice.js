@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
 const camDeviceSchema = new mongoose.Schema(
     {
-        farmID:{
+        farmID: {
             type: ObjectId,
             ref: "Farm",
         },
@@ -11,23 +11,23 @@ const camDeviceSchema = new mongoose.Schema(
             trim: true,
             required: true,
             maxlength: 32,
-        },delayTime:{
+        }, delayTime: {
             type: Number,
             required: true,
-        },resolution:{
+        }, resolution: {
             type: Number,
             trim: true,
             required: true,
             maxlength: 32,
-        },status:{
-            type: Boolean,
-            default: false,
-        },userID:{
+        }, userID: {
             type: ObjectId,
             ref: "User",
         }
     },
-    { timestamps: true }
+    { timestamps: true, toJSON: { virtuals: true } }
 );
-
+camDeviceSchema.virtual("status").get(function () {
+    if(this.userID)return true;
+    return false
+});
 module.exports = mongoose.model("CamDevice", camDeviceSchema);
