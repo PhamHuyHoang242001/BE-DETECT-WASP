@@ -56,6 +56,45 @@ exports.signin = (req, res) => {
         });
     });
 };
+exports.login = (req, res) => {
+    // fin the user baserd on email
+    const { email, password, fcm_token } = req.body;
+    User.findOne({ email: email }, (err, user) => {
+        if (err || !user) {
+            return res.status(400).json({
+                error: "User with that email does not exist. Please signup",
+            });
+        }
+        //if user is found make sure the email and password match
+        //create authenticate method in user model
+        if (!user.authenticate(password)) {
+            return res.status(401).json({
+                error: "Email number and password dont match",
+            });
+        }
+        //generate a signed token with user id and secret
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+        //persist the token as 't' in cookie with expiry date
+        res.cookie("t", token, { expire: new Date() + 9999 });
+        if(fcm_token){
+            user.fcm_token = fcm_token
+        }
+        const { _id, name, email, role, phone, address } = user;
+        console.log(user);
+        user.save((err, data) => {
+            if (err) {
+                return res.status(400).json({
+                    error: errorHandler(err),
+                });
+            }
+        })
+        //return response with user and token to frontend client
+        return res.json({
+            token,
+            user: { _id, email, name, role, phone, address },
+        });
+    });
+};
 exports.signout = (req, res) => {
     res.clearCookie("t");
     res.json({ message: "Signout success" });

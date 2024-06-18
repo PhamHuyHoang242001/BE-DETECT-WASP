@@ -11,11 +11,8 @@ const farmSchema = new mongoose.Schema(
             trim: true,
             required: true,
             maxlength: 32,
-        },
-        numberDevices:{
-            type: Number,
-            default: 0
         }
+
     },
     { timestamps: true }
 );
