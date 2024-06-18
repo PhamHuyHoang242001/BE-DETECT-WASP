@@ -17,6 +17,7 @@ exports.create = (req, res) => {
     const camDevice = new CamDevice(req.body);
     camDevice.save((err, camDevice) => {
         if (err) {
+            console.log(err)
             return res.status(400).json({
                 error: errorHandler(err),
             });

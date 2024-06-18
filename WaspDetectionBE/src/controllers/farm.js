@@ -31,14 +31,26 @@ exports.read = (req, res) => {
 exports.list = async (req, res) => {
     try {
         let farmByUser = await Farm.find({ ownerID: { $eq: req.params.ownerID } })
-        
-        return res.json(farmByUser)
+        let listFarm = []
+        for (let farm of farmByUser) {
+            const numberDevices = await CamDevice.countDocuments({ farmID: { $eq: farm._id } })
+            const farmDetail = {
+                "_id": farm._id,
+                "name": farm.name,
+                "createdAt": farm.createdAt,
+                "updatedAt": farm.updatedAt,
+                "ownerID": farm.ownerID,
+                "numberDevices": numberDevices,
+            }
+            listFarm.push(farmDetail)
+        }
+        return res.json(listFarm)
     } catch (err) {
         return res.status(400).json({
             error: errorHandler(err),
         });
     }
-    
+
 };
 exports.listSearch = async (req, res) => {
     //create query object to hold search value and category value
@@ -59,7 +71,20 @@ exports.listSearch = async (req, res) => {
         data.page_size = pagesize;
         const farms = await Farm.find(query).sort([[sortBy, order]]).skip(skip)
             .limit(pagesize)
-        data.results = farms
+        let listFarm = []
+        for (let farm of farms) {
+            const numberDevices = await CamDevice.countDocuments({ farmID: { $eq: farm._id } })
+            const farmDetail = {
+                "_id": farm._id,
+                "name": farm.name,
+                "createdAt": farm.createdAt,
+                "updatedAt": farm.updatedAt,
+                "ownerID": farm.ownerID,
+                "numberDevices": numberDevices,
+            }
+            listFarm.push(farmDetail)
+        }
+        data.results = listFarm
         return res.json(data)
 
     }

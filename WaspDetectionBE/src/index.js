@@ -36,6 +36,7 @@ mongoose
         console.log("Database connected");
     })
     .catch((err) => {
+        console.log(DB_HOST,DB_NAME,DB_PORT,DB_USER)
         console.log(err);
     });
 //middlewares

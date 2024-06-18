@@ -72,7 +72,7 @@ exports.listSearch = async (req, res) => {
         data.num_pages = Math.ceil(allUser / pagesize);
         data.page = page;
         data.page_size = pagesize;
-        const users = await User.find(query).sort([[sortBy, order]]).skip(skip)
+        const users = await User.find(query).select("-salt -hashed_password").sort([[sortBy, order]]).skip(skip)
             .limit(pagesize)
         data.results = users
         return res.json(data)
