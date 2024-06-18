@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken"); // generate signed token
 const { expressjwt } = require("express-jwt"); //authorization check
+const {errorHandler} = require("../helpers/dbErrorHandle")
 require("dotenv").config();
 exports.signup = (req, res) => {
     console.log("req.body", req.body);
@@ -9,7 +10,7 @@ exports.signup = (req, res) => {
         if (err) {
             console.log(err)
             return res.status(400).json({
-                err: "Could not save user check the required field",
+                err: errorHandler(err)
             });
         }
         user.salt = undefined;

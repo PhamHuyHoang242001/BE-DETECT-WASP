@@ -72,10 +72,7 @@ exports.create = async (req, res) => {
         data_predict.data['imageID'] = newImageName
         console.log(data_predict.data)
         return res.json(data_predict.data)
-        fs.writeFile(newPath, rawData, function (err) {
-          if (err) console.log(err);
-          return res.json(camDevice);
-        });
+
 
       }
     } catch (err) {
@@ -102,10 +99,11 @@ exports.list = (req, res) => {
   console.log(req.query.fromTime);
   let fromTime = req.query.fromTime ? new Date(req.query.fromTime) : 0;
   let toTime = req.query.toTime ? new Date(req.query.toTime) : new Date();
+  let limit = req.query.imageCount ? parseInt(req.query.imageCount) : 1000000
   Image.find({
     createdAt: { $lte: toTime, $gte: fromTime },
     deviceID: { $eq: req.camDevice._id },
-  }).exec((err, data) => {
+  }).limit(limit).sort("-createdAt").exec((err, data) => {
     if (err) {
       return res.status(400).json({
         error: errorHandler(err),

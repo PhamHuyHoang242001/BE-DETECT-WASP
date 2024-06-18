@@ -75,6 +75,7 @@ exports.update = (req, res) => {
     const farm = req.farm;
     farm.name = req.body.name ? req.body.name : farm.name;
     farm.ownerID = req.body.ownerID ? req.body.ownerID : farm.ownerID
+    farm.numberDevices = req.body.numberDevices ? req.body.numberDevices : farm.numberDevices
     farm.save((err, data) => {
         if (err) {
             return res.status(400).json({
@@ -84,8 +85,13 @@ exports.update = (req, res) => {
         res.json(data);
     });
 };
-exports.remove = (req, res) => {
+exports.remove = async(req, res) => {
     const farm = req.farm;
+    const listDevice = await CamDevice.find({farmID: farm._id})
+    for(const item of listDevice){
+        item.farmID = undefined
+        await item.save();
+    }
     farm.remove((err, data) => {
         if (err) {
             return res.status(400).json({

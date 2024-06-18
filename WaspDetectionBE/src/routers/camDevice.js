@@ -9,14 +9,16 @@ const {
     listByFarm,
     listSearch,
     changeNumberDevice,
+    changeNumberDeviceInsert,
+    listCamDeviceNotUsed
 } = require("../controllers/camDevice.js");
 
 
 
-router.post("/camdevice", changeNumberDeviceInsert, create);
+router.post("/camdevice", changeNumberDeviceInsert,create);
 router.get("/camdevice/:camDeviceId", read);
 router.put(
-    "/camdevice/:camDeviceId", changeNumberDevice,
+    "/camdevice/:camDeviceId",changeNumberDevice,
     update
 );
 router.delete(
@@ -25,6 +27,7 @@ router.delete(
 );
 router.get("/camdevice/farm/:farmID", listByFarm);
 router.get("/camdevice", listSearch);
+router.get("/camdevice/user/:userID", listCamDeviceNotUsed);
 router.param("camDeviceId", camDeviceById);
 
 module.exports = router;
