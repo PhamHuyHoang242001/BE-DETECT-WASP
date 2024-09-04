@@ -4,7 +4,7 @@ services:
   mongodb:
     image: mongo:5.0.2
     restart: unless-stopped
-    env_file: 
+    env_file:
       - ./.env
     environment:
       - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
@@ -18,7 +18,7 @@ services:
       - mongodb
     build: ./WaspDetectionBE
     restart: unless-stopped
-    env_file: 
+    env_file:
       - ./.env
     ports:
       - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
@@ -32,13 +32,3 @@ services:
       - ./uploads:/app/uploads
     stdin_open: true
     tty: true
-  yolov8-service:
-    depends_on:
-      - app
-    build: ./yolov8-service
-    restart: unless-stopped
-    ports:
-      - $FASTAPI_LOCAL_PORT:$FASTAPI_DOCKER_PORT
-    volumes:
-      - ./uploads:/code/app/uploads
-
